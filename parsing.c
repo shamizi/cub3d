@@ -6,23 +6,146 @@
 /*   By: shamizi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 12:47:24 by shamizi           #+#    #+#             */
-/*   Updated: 2021/03/29 15:42:36 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/13 16:17:04 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_cub.h"
 
-void	ft_color(char **str, t_cub *cub)
+int		ft_resolution(t_cub *cub, char *str)
 {
-	//si on a deja recuperer des infos sur NSEW mais pas la resolution -->error
-	//si on a deja un nb de ligne de map mais pas les info NSEW et sprite -->pb
-	//verifier caractere R en 1ere position
-	//si resolution x ou y est deja initialiser -->double initialisation donc c une erreur 
-	//donner les valeur RX et RY
-	//premier caractere peut etre aussi Floor ou Celling
+	int res;
+
+	res = 0;
+	if (str[cub->i] != ' ')
+		cub->error = 2;
+	while (str[cub->i] == ' ' && str[cub->i])
+		cub->i++;
+	if (str[cub->i] == '+' || str[cub->i] == '-')
+		cub->error = 2;
+	while (str[cub->i] >= '0' && str[cub->i] <= '9')
+	{
+		res = 10 * res + (str[cub->i] - '0');
+		cub->i++;
+	}
+	return (res);
 }
 
-void	parsing(char *fichier, t_cub *cub)
+void	ft_check_FC(char *str, t_cub *cub)
+{
+	int i;
+	int nb;
+	int virgule;
+
+	i = 1;
+	nb = 0;
+	virgule = 0;
+	while (str[i])
+	{
+		if(str[i] != ' ' || str[i] != ',' || (str[i] >= '0' && str[i] <= '9'))
+			cub->error = 2;
+		if (str[i] >= '0' && str[i] <= '9' && nb == 0)
+			nb = 1;
+		if (nb == 1 && str[i] == ',')
+		{
+			virgule++;
+			nb = 0;
+		}
+		i++;
+	}
+	if (virgule != 2)
+		cub->error = 2;
+}
+
+int		ft_FC(char *str, t_cub *cub)
+{
+	int check;
+
+	if (str[1] != ' ')
+		cub->error = 2;
+	ft_check_FC(str, cub);
+	while (str[cub->i] == ' ' || str[cub->i == ','])
+	{
+		check = 0;
+		cub->i++;
+		while (str[cub->i] >= '0' && str[cub->i] <= '9')
+		{
+			cub->FC = cub->FC * 10 + str[cub->i] - 48;
+			check = check * 10 + str[cub->i] - 48;
+			cub->i++;
+		}
+		if (check > 255 || check < 0)
+			cub->error = 2;
+	}
+	return (cub->FC);
+}
+
+void	ft_color(char **str, t_cub *cub)
+{
+	int i;
+
+	i = 0;
+	cub->i = 1;
+	if (cub->nbligne > 0 && (cub->NO == NULL || cub->SO == NULL
+				|| cub->EA == NULL|| cub->WE == NULL || cub->SP == NULL))
+		cub->error = 2;
+	if  ((cub->NO != NULL || cub->SO != NULL || cub->EA != NULL
+				|| cub->WE != NULL || cub->SP != NULL) && (cub->rx == 0 || cub->ry == 0))
+		cub->error = 2;
+	if (*str[i] == 'R')
+	{
+		if (cub->rx != 0 || cub->ry != 0)
+			cub->error = 2;
+		cub->rx = ft_resolution(cub, *str);
+		cub->ry = ft_resolution(cub, *str);
+	}
+	else if (*str[i] == 'F')
+		cub->F = ft_FC(*str, cub);
+	else if (*str[i] == 'C')
+		cub->C = ft_FC(*str, cub);
+}
+
+void	ft_path(char *str, t_cub *cub, char **texture, int i)
+{
+	int j;
+
+	j = 0;
+	if (*texture != NULL)
+		cub->error = 2;
+	while (str[i] && str[i] != '.')
+	{
+		if (str[i] != ' ' && str[i] != '.')
+			cub->error = 2;
+		i++;
+	}
+	if (!(*texture = (char *)(malloc(sizeof(char) * (ft_strlen(str) + 1)))))
+		cub->error = 2;
+	while (str[i])
+	{
+		(*texture)[j] = str[i];
+		i++;
+		j++;
+	}
+	(*texture)[j] = '\0';
+}
+
+void	ft_texture(char *str, t_cub *cub)
+{
+	int i;
+
+	i = 0;
+	if (str[i] == 'N' && str[i + 1] == 'O')
+		ft_path(str, cub, &cub->NO, 2);
+	else if (str[i] == 'S' && str[i + 1] == 'O')
+		ft_path(str, cub, &cub->SO, 2);
+	else if (str[i] == 'E' && str[i + 1] == 'A')
+		ft_path(str, cub, &cub->EA, 2);
+	else if (str[i] == 'W' && str[i + 1] == 'E')
+		ft_path(str, cub, &cub->WE, 2);
+	else if (str[i] == 'S' && str[i + 1] != 'O')
+		ft_path(str, cub, &cub->SP, 1);
+}
+void	ft_parsing(char *fichier, t_cub *cub)
 {
 	int fd;
 	int ret;
@@ -30,25 +153,25 @@ void	parsing(char *fichier, t_cub *cub)
 
 	ret = 1;
 	str = NULL;
-	if (fd = open(fichier, O_DIRECTORY != -1))
-			//ERROR directory;
-	if(fd = open(fichier, O_RDONLY == -1))
-		//ERROR fichier invalide;
+	if ((fd = open(fichier, O_DIRECTORY)) != -1)
+		ft_error(cub, "IS A DIRECTORY", 14);
+	if((fd = open(fichier, O_RDONLY)) == -1)
+		ft_error(cub, "INVALIDE .CUB", 13);
 	while (ret != 0)
 	{
 		ret = get_next_line(fd, &str, cub);
 		if (cub->error == 2)
-			//error de parsing
+			ft_error(cub, "erreur de parsing", 17);
 		ft_color(&str, cub);
 		ft_texture(str, cub);
 		ft_map(str, cub);
 		free(str);
 	}
 	close (fd);
-	if (cub->nbligne == 0 || cub->sizeline == 0)
-		//error de map
-	ft_parse_map(fichier, cub);
-	}
+	if (cub->nbligne == 0)
+		ft_error(cub, "pas de map", 10);
+	//ft_parse_map(fichier, cub);
+}
 
 int		check_cub(char *str, t_cub *cub)
 {
@@ -61,7 +184,7 @@ int		check_cub(char *str, t_cub *cub)
 	{
 		if (i == 0)
 		{
-			//ERROR nom de fichier map
+			ft_error(cub, "nom de fichier invalide", 23);
 			return (0);
 		}
 		i--;
@@ -69,6 +192,35 @@ int		check_cub(char *str, t_cub *cub)
 	if (str[i + 1] == 'c' && str[i + 2] == 'u' && str[i + 3] == 'b' && str[i + 4] == '\0')
 		ft_parsing(str, cub);
 	else
-		//ERROR nom de ficheir map
+		ft_error(cub, "nom de fichier invalide", 23);
 	return (0);
+}
+
+void	ft_init(t_cub *cub)
+{
+	cub->i = 0;
+	cub->error = 0;
+	cub->FC = 0;
+	cub->nbligne = 0;
+	cub->NO = NULL;
+	cub->SO = NULL;
+	cub->EA = NULL;
+	cub->WE = NULL;
+	cub->SP = NULL;
+	cub->rx = 0;
+	cub->ry = 0;
+	cub->F = 0;
+	cub->C = 0;
+}
+
+int		main(int argc, char **argv)
+{
+	t_cub *cub;
+	ft_init(cub);
+	if (argc == 2)
+	{
+		check_cub(argv[1], cub);
+	}
+	else
+		write(1, "Error\nARGUMENTS INVALIDES\n", 30);
 }
