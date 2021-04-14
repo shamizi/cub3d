@@ -6,7 +6,7 @@
 /*   By: shamizi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 12:55:18 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/13 16:17:15 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/14 15:16:06 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define BUFFER_SIZE 10000
 typedef struct s_cub	t_cub;
 struct					s_cub
 {
@@ -42,8 +43,11 @@ struct					s_cub
 	int FLMAP;
 };
 
+int		get_next_line(int fd, char **line, t_cub *cub);
 int		ft_strlen(char *str);
-
+void	*ft_memcpy(void *dest, const void *src, size_t len);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+char	*ft_strjoin(char const *s1, char const *s2);
 void	ft_error(t_cub *cub, char *str, int i);
 int	stock_map(char *str, t_cub *cub);
 void	ft_map(char *str, t_cub *cub);

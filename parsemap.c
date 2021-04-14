@@ -6,21 +6,12 @@
 /*   By: shamizi <shamizi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 16:38:37 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/13 16:11:22 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/14 14:55:43 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_cub.h"
 
-int		ft_strlen(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return(i);
-}
 int		stock_map(char *str, t_cub *cub)
 {
 	static int i = 0;
