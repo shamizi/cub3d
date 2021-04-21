@@ -6,7 +6,7 @@
 /*   By: shamizi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 12:47:24 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/14 17:01:48 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/19 16:52:40 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,10 @@ void	ft_check_FC(char *str, t_cub *cub)
 	i = 1;
 	nb = 0;
 	virgule = 0;
-	//printf("\n FIRST ERROR %d\n", cub->error);
-
 	while (str[i])
 	{
-		if(str[i] != ' ' || str[i] != ',' || (str[i] >= '0' && str[i] <= '9'))
+		if (str[i] != ' ' && str[i] != ',' && !(str[i] >= '0' && str[i] <= '9'))
 			cub->error = 1;
-
-		//printf("\nchar*%c*",str[i]);
-
-		//printf("\n ERROR %d\n", cub->error);
 		if (str[i] >= '0' && str[i] <= '9' && nb == 0)
 			nb = 1;
 		if (nb == 1 && str[i] == ',')
@@ -68,11 +62,8 @@ int		ft_FC(char *str, t_cub *cub)
 	int check;
 
 	cub->FC = 0;
-	printf("/n CHAR*%c*\n",str[1]);
-	printf("\nERROR*%d*\n",cub->error);
 	if (str[1] != ' ')
 		cub->error = 2;
-printf("\nERROR*%d*\n",cub->error);
 
 	ft_check_FC(str, cub);
 	while (str[cub->i] == ' ' || str[cub->i] == ',')
@@ -87,7 +78,6 @@ printf("\nERROR*%d*\n",cub->error);
 		}
 		if (check > 255 || check < 0)
 			cub->error = 2;
-		printf("\nCHECK%d\n", check);
 	}
 	return (cub->FC);
 }
@@ -101,9 +91,9 @@ void	ft_color(char **str, t_cub *cub)
 	if (cub->nbligne > 0 && (cub->NO == NULL || cub->SO == NULL
 				|| cub->EA == NULL|| cub->WE == NULL || cub->SP == NULL))
 		cub->error = 3;
-	if  ((cub->NO != NULL || cub->SO != NULL || cub->EA != NULL
-				|| cub->WE != NULL || cub->SP != NULL) && (cub->rx == 0 || cub->ry == 0))
-		cub->error = 3;
+//	if  ((cub->NO != NULL || cub->SO != NULL || cub->EA != NULL
+//				|| cub->WE != NULL || cub->SP != NULL) && (cub->rx == 0 || cub->ry == 0))
+//		cub->error = 3;
 	if (*str[i] == 'R')
 	{
 		if (cub->rx != 0 || cub->ry != 0)
@@ -182,7 +172,7 @@ void	ft_parsing(char *fichier, t_cub *cub)
 	close (fd);
 	if (cub->nbligne == 0)
 		ft_error(cub, "pas de map", 10);
-	//ft_parse_map(fichier, cub);
+	stock_map(fichier, cub);
 }
 
 int		check_cub(char *str, t_cub *cub)
@@ -223,19 +213,37 @@ void	ft_init(t_cub *cub)
 	cub->ry = 0;
 	cub->F = 0;
 	cub->C = 0;
+	cub->posx = 0;
+	cub->posy = 0;
 }
 
 int		main(int argc, char **argv)
 {
-	t_cub cub;
-	ft_init(&cub);
+	t_cub *cub;
+	cub = malloc(sizeof(*cub));
+	ft_init(cub);
 	if (argc == 2)
 	{
-		check_cub(argv[1], &cub);
+		check_cub(argv[1], cub);
 	}
 	else
 		write(1, "Error\nARGUMENTS INVALIDES\n", 30);
-	//printf("\n i :%d\n error :%d\n FC : %d\n nbligne : %d\n NO : %s\n SO : %s\n EA : %s\n WE :%s\n SP: %s\nRX :%d\nRY :%d\nF : %d\n:C %d\n\n FLMAP :%d\n",
-	//		cub.i,cub.error,cub.FC,cub.nbligne,cub.NO,cub.SO,cub.EA,cub.WE,cub.SP,cub.rx,cub.ry,cub.F,cub.C,cub.FLMAP);
+//	printf("\n i :%d\n error :%d\n FC : %d\n nbligne : %d\n NO : %s\n SO : %s\n EA : %s\n WE :%s\n SP: %s\nRX :%d\nRY :%d\nF : %d\n:C %d\n\n FLMAP :%d\n",
+//			cub->i,cub->error,cub->FC,cub->nbligne,cub->NO,cub->SO,cub->EA,cub->WE,cub->SP,cub->rx,cub->ry,cub->F,cub->C,cub->FLMAP);
+	
+	int i;
+	int j;
+	i = 0;
+	while(i < 14)
+	{
+		j = 0;
+		while(cub->map[i][j] != '\0')
+		{
+			printf("%c", cub->map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
 	return (0);
 }
