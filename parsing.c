@@ -6,7 +6,7 @@
 /*   By: shamizi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 12:47:24 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/19 16:52:40 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/21 16:24:21 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void	ft_parsing(char *fichier, t_cub *cub)
 		ft_error(cub, "INVALIDE .CUB", 13);
 	while (ret != 0)
 	{
-		ret = get_next_line(fd, &str, cub);
+		ret = get_next_line(fd, &str);
 		if (cub->error != 0)
 			ft_error(cub, "erreur de parsing", 17);
 		ft_color(&str, cub);
@@ -219,6 +219,7 @@ void	ft_init(t_cub *cub)
 
 int		main(int argc, char **argv)
 {
+	size_t x;
 	t_cub *cub;
 	cub = malloc(sizeof(*cub));
 	ft_init(cub);
@@ -227,7 +228,8 @@ int		main(int argc, char **argv)
 		check_cub(argv[1], cub);
 	}
 	else
-		write(1, "Error\nARGUMENTS INVALIDES\n", 30);
+		x = write(1, "Error\nARGUMENTS INVALIDES\n", 30);
+	(void)x;
 //	printf("\n i :%d\n error :%d\n FC : %d\n nbligne : %d\n NO : %s\n SO : %s\n EA : %s\n WE :%s\n SP: %s\nRX :%d\nRY :%d\nF : %d\n:C %d\n\n FLMAP :%d\n",
 //			cub->i,cub->error,cub->FC,cub->nbligne,cub->NO,cub->SO,cub->EA,cub->WE,cub->SP,cub->rx,cub->ry,cub->F,cub->C,cub->FLMAP);
 	

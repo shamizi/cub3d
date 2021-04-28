@@ -6,7 +6,7 @@
 /*   By: shamizi <shamizi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 16:38:37 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/19 18:03:48 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/21 16:22:49 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int		stock_map(char *fichier, t_cub *cub)
 		return (0);
 	while (res != 0)
 	{
-		res = get_next_line(fd, &str, cub);
+		res = get_next_line(fd, &str);
 		if (str[0] == ' ' || str[0] == '1' ||str[0] == '0' ||str[0] == '2')
 			ft_stock_map(str, cub);
 		free(str);

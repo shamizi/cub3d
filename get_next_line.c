@@ -6,7 +6,7 @@
 /*   By: shamizi <shamizi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:56:55 by shamizi           #+#    #+#             */
-/*   Updated: 2021/04/14 14:45:03 by shamizi          ###   ########.fr       */
+/*   Updated: 2021/04/21 16:20:51 by shamizi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*ft_left(char *str)
 	return (res);
 }
 
-int		get_next_line(int fd, char **line, t_cub *cub)
+int		get_next_line(int fd, char **line)
 {
 	int			res;
 	char		*buff;
